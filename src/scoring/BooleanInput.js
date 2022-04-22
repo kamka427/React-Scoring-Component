@@ -1,6 +1,14 @@
 import { Box, Checkbox, Container, Divider, Typography } from "@mui/material";
+import { useState } from "react";
 
-export const BooleanInput = ({ aspect }) => {
+export const BooleanInput = ({ aspect, results }) => {
+  const [value, setValue] = useState(results[aspect.id] || false);
+
+  const handleChange = (e) => {
+    setValue(e.target.checked);
+    results[aspect.id] = e.target.checked;
+  };
+
   return (
     <>
       <Container
@@ -18,7 +26,10 @@ export const BooleanInput = ({ aspect }) => {
             borderRadius: 2,
           }}
         >
-          <Checkbox />
+          <Checkbox
+            checked={value}
+            onChange={handleChange}
+           />
           <Divider orientation="vertical" variant="middle" flexItem />
 
           <Typography

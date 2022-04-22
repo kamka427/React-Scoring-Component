@@ -23,6 +23,7 @@ export const NavBar = ({ title, isDark, setTheme }) => {
             <Typography variant="h6">Pontozó rendszer: {title}</Typography>
 
             <ToggleButton
+              value={isDark}
               selected={isDark}
               onChange={setTheme}
               sx={{ color: "white" }}

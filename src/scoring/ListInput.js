@@ -1,13 +1,8 @@
-import {
-  Box,
-  Container,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  Typography,
-} from "@mui/material";
+import { Container, RadioGroup } from "@mui/material";
+import { useState } from "react";
+import { ListBox } from "./ListBox";
 
-export const ListInput = ({ aspect }) => {
+export const ListInput = ({ aspect, results }) => {
   const items = Object.keys(aspect.values).map((key, index) => {
     return {
       key: key,
@@ -15,51 +10,21 @@ export const ListInput = ({ aspect }) => {
     };
   });
 
+  const [value, setValue] = useState(results[aspect.id] || "");
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    results[aspect.id] = e.target.value;
+  };
+
   const list = items.map((item, i) => {
     return (
-      <>
-        <Container
-          key={i}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              border: "1px  solid",
-              borderColor: "gray.main",
-              borderRadius: 2,
-            }}
-          >
-            <FormControlLabel
-              value={i}
-              control={<Radio />}
-              label={item.key}
-              required={aspect.required}
-              sx={{
-                width: "100%",
-                paddingX: 1,
-              }}
-            />
-            <Typography
-              sx={{
-                backgroundColor: "primary.main",
-                color: "white",
-                height: "100%",
-                paddingX: 2,
-                paddingTop: 1,
-                borderTopRightRadius: 7,
-                borderBottomRightRadius: 7,
-              }}
-            >
-              {item.value}
-            </Typography>
-          </Box>
-        </Container>
-      </>
+      <ListBox
+        key={i}
+        aspect={aspect}
+        item={item}
+        handleChange={handleChange}
+      />
     );
   });
 
@@ -72,6 +37,7 @@ export const ListInput = ({ aspect }) => {
         }}
       >
         <RadioGroup
+          value={value}
           sx={{
             display: "flex",
             flexDirection: "column",

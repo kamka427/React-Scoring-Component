@@ -1,6 +1,15 @@
 import { Box, Container, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 
-export const NumberInput = ({ aspect }) => {
+export const NumberInput = ({ aspect, results }) => {
+
+  const [value, setValue] = useState(results[aspect.id] || "");
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    results[aspect.id] = e.target.value;
+  };
+
   return (
     <>
       <Container
@@ -22,6 +31,8 @@ export const NumberInput = ({ aspect }) => {
             size="small"
             required={aspect.required}
             label={aspect.required ? "Kötelező" : "Opcionális"}
+            value={value}
+            onChange={handleChange}
           ></TextField>
 
           <Typography

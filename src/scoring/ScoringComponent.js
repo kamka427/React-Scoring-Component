@@ -27,6 +27,9 @@ const lightTheme = createTheme({
 export function ScoringComponent({ criteria, onSubmit, onCancel }) {
   console.log(criteria);
 
+  const [results] = useState([]);
+  const [error] = useState([]);
+
   const taskNames = criteria.tasks.map((task) => task.name);
 
   const aspects = criteria.tasks.map((task) => task.aspects);
@@ -58,6 +61,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
             <Tasks
               taskNames={taskNames}
               aspects={aspects}
+              results={results}
               onSubmit={onSubmit}
               onCancel={onCancel}
             />

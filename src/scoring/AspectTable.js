@@ -11,19 +11,18 @@ import { ErrorCard } from "./ErrorCard";
 import { ListInput } from "./ListInput";
 import { NumberInput } from "./NumberInput";
 
-export const AspectTable = ({ aspects }) => {
+export const AspectTable = ({ aspects, results }) => {
   const rows = aspects.map((aspect, i) => {
     let component;
     switch (aspect.type) {
       case "number":
-        component = <NumberInput key={i} aspect={aspect} />;
+        component = <NumberInput key={i} aspect={aspect} results={results} />;
         break;
       case "list":
-        component = <ListInput key={i} aspect={aspect} />;
+        component = <ListInput key={i} aspect={aspect} results={results} />;
         break;
-
       case "boolean":
-        component = <BooleanInput key={i} aspect={aspect} />;
+        component = <BooleanInput key={i} aspect={aspect} results={results} />;
         break;
       default:
         break;
