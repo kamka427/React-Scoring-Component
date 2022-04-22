@@ -4,7 +4,15 @@ import { useState } from "react";
 import { AspectTable } from "./AspectTable";
 import { Buttons } from "./Buttons";
 
-export function Tasks({ taskNames, aspects, onSubmit, onCancel, results }) {
+export function Tasks({
+  taskNames,
+  aspects,
+  onSubmit,
+  onCancel,
+  formState,
+  addResult,
+  removeResult,
+}) {
   const [tabIndex, setTabIndex] = useState("0");
   const switchTab = (e, newTabIndex) => setTabIndex(newTabIndex);
 
@@ -31,7 +39,12 @@ export function Tasks({ taskNames, aspects, onSubmit, onCancel, results }) {
   const tables = aspects.map((aspect, i) => {
     return (
       <TabPanel key={i} value={i.toString()}>
-        <AspectTable aspects={aspect} results={results} />
+        <AspectTable
+          aspects={aspect}
+          formState={formState}
+          addResult={addResult}
+          removeResult={removeResult}
+        />
       </TabPanel>
     );
   });

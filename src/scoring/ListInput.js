@@ -2,7 +2,9 @@ import { Container, RadioGroup } from "@mui/material";
 import { useState } from "react";
 import { ListBox } from "./ListBox";
 
-export const ListInput = ({ aspect, results }) => {
+export const ListInput = ({ aspect, formState, addResult, removeResult }) => {
+  console.log(formState);
+
   const items = Object.keys(aspect.values).map((key, index) => {
     return {
       key: key,
@@ -10,11 +12,13 @@ export const ListInput = ({ aspect, results }) => {
     };
   });
 
-  const [value, setValue] = useState(results[aspect.id] || "");
+  const val = formState.results.find((result) => result.id === aspect.id);
+
+  const [value, setValue] = useState(val ? val.value : "");
 
   const handleChange = (e) => {
     setValue(e.target.value);
-    results[aspect.id] = e.target.value;
+    e.target.value !== "" ? addResult(e, aspect) : removeResult(e, aspect);
   };
 
   const list = items.map((item, i) => {

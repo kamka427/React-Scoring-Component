@@ -1,13 +1,15 @@
 import { Box, Container, TextField, Typography } from "@mui/material";
+import { rootShouldForwardProp } from "@mui/material/styles/styled";
 import { useState } from "react";
 
-export const NumberInput = ({ aspect, results }) => {
+export const NumberInput = ({ aspect, formState, addResult, removeResult }) => {
+  const val = formState.results.find((result) => result.id === aspect.id);
 
-  const [value, setValue] = useState(results[aspect.id] || "");
+  const [value, setValue] = useState(val ? val.value : "");
 
   const handleChange = (e) => {
     setValue(e.target.value);
-    results[aspect.id] = e.target.value;
+    e.target.value === "" ? removeResult(e, aspect) : addResult(e, aspect);
   };
 
   return (

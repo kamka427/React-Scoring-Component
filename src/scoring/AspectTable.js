@@ -5,24 +5,54 @@ import {
   TableBody,
   TableRow,
   TableHead,
+  LinearProgress,
 } from "@mui/material";
 import { BooleanInput } from "./BooleanInput";
 import { ErrorCard } from "./ErrorCard";
 import { ListInput } from "./ListInput";
 import { NumberInput } from "./NumberInput";
 
-export const AspectTable = ({ aspects, results }) => {
+export const AspectTable = ({
+  aspects,
+  formState,
+  addResult,
+  removeResult,
+}) => {
   const rows = aspects.map((aspect, i) => {
     let component;
     switch (aspect.type) {
       case "number":
-        component = <NumberInput key={i} aspect={aspect} results={results} />;
+        component = (
+          <NumberInput
+            key={i}
+            aspect={aspect}
+            formState={formState}
+            addResult={addResult}
+            removeResult={removeResult}
+          />
+        );
         break;
       case "list":
-        component = <ListInput key={i} aspect={aspect} results={results} />;
+        component = (
+          <ListInput
+            key={i}
+            aspect={aspect}
+            formState={formState}
+            addResult={addResult}
+            removeResult={removeResult}
+          />
+        );
         break;
       case "boolean":
-        component = <BooleanInput key={i} aspect={aspect} results={results} />;
+        component = (
+          <BooleanInput
+            key={i}
+            aspect={aspect}
+            formState={formState}
+            addResult={addResult}
+            removeResult={removeResult}
+          />
+        );
         break;
       default:
         break;
