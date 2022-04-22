@@ -1,5 +1,4 @@
 import { Box, Container, TextField, Typography } from "@mui/material";
-import { blue } from "@mui/material/colors";
 
 export const NumberInput = ({ aspect }) => {
   return (
@@ -22,12 +21,12 @@ export const NumberInput = ({ aspect }) => {
             variant="outlined"
             size="small"
             required={aspect.required}
-            label={aspect.required ? "Required" : "Optional"}
+            label={aspect.required ? "Kötelező" : "Opcionális"}
           ></TextField>
 
           <Typography
             sx={{
-              backgroundColor: blue[600],
+              backgroundColor: "primary.main",
               color: "white",
               alignSelf: "self-end",
               padding: 1,

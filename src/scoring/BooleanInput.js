@@ -1,5 +1,4 @@
 import { Box, Checkbox, Container, Divider, Typography } from "@mui/material";
-import { blue, grey } from "@mui/material/colors";
 
 export const BooleanInput = ({ aspect }) => {
   return (
@@ -15,7 +14,7 @@ export const BooleanInput = ({ aspect }) => {
             display: "flex",
             alignItems: "center",
             border: "1px  solid",
-            borderColor: grey[600],
+            borderColor: "gray.main",
             borderRadius: 2,
           }}
         >
@@ -24,7 +23,7 @@ export const BooleanInput = ({ aspect }) => {
 
           <Typography
             sx={{
-              backgroundColor: blue[600],
+              backgroundColor: "primary.main",
               color: "white",
               height: "100%",
               paddingX: 2,

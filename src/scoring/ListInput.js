@@ -6,7 +6,6 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { blue, grey } from "@mui/material/colors";
 
 export const ListInput = ({ aspect }) => {
   const items = Object.keys(aspect.values).map((key, index) => {
@@ -31,7 +30,7 @@ export const ListInput = ({ aspect }) => {
               display: "flex",
               alignItems: "center",
               border: "1px  solid",
-              borderColor: grey[600],
+              borderColor: "gray.main",
               borderRadius: 2,
             }}
           >
@@ -47,7 +46,7 @@ export const ListInput = ({ aspect }) => {
             />
             <Typography
               sx={{
-                backgroundColor: blue[600],
+                backgroundColor: "primary.main",
                 color: "white",
                 height: "100%",
                 paddingX: 2,

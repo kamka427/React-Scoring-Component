@@ -14,11 +14,11 @@ export const Buttons = ({ onSubmit, onCancel, onNext, onPrev }) => {
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
           <Button variant="contained" color="success" onClick={onSubmit}>
-            Submit
+            Mentés
           </Button>
           <Divider orientation="vertical" variant="middle" flexItem />
           <Button variant="contained" color="error" onClick={onCancel}>
-            Cancel
+            Mégse
           </Button>
         </Box>
         <Button variant="contained" onClick={onNext}>
