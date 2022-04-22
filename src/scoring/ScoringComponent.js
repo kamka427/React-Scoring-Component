@@ -1,29 +1,21 @@
-import { TabContext, TabPanel, TabList } from "@mui/lab";
 import {
-  AppBar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Container,
   CssBaseline,
-  Stack,
+  LinearProgress,
 } from "@mui/material";
-
-import { Tabs } from "./Tabs";
-import { Nav } from "./Nav";
-import { FormButtons } from "./FormButtons";
-import { NumberCard, NumberComponent } from "./NumberCard";
-import { BooleanCard } from "./BooleanCard";
-
+import { Tasks } from "./Tasks";
+import { NavBar } from "./NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useState } from "react";
-import { Box } from "@mui/system";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import { ErrorCard } from "./ErrorCard";
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-  }
+  },
 });
 
 const lightTheme = createTheme({
@@ -35,34 +27,10 @@ const lightTheme = createTheme({
 export function ScoringComponent({ criteria, onSubmit, onCancel }) {
   console.log(criteria);
 
-  const handleOnSubmit = () => {};
-  const handleOnCancel = () => {};
-
   const taskNames = criteria.tasks.map((task) => task.name);
-  const tasks = criteria.tasks.map((task) => {
-    return task.aspects.map((aspect, i) => {
-      switch (aspect.type) {
-        case "number":
-          console.log("Number");
-          return <NumberCard key={i} index={i} aspect={aspect} />;
 
-        case "list":
-          console.log("List");
+  const aspects = criteria.tasks.map((task) => task.aspects);
 
-          break;
-
-        case "boolean":
-          console.log("Boolean");
-          return <BooleanCard key={i} index={i} aspect={aspect} />;
-
-        default:
-          console.log("Default");
-          break;
-      }
-    });
-  });
-
-  //toggle dark theme
   const [darkThemeEnabled, toggleTheme] = useState(false);
 
   const toggleThemeHandler = () => {
@@ -74,11 +42,29 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
   return (
     <>
       <ThemeProvider theme={theme}>
-      <CssBaseline />
-
-          <Nav title={criteria.name} isDark={darkThemeEnabled} setTheme={toggleThemeHandler} />
-          <Tabs taskNames={taskNames} tasks={tasks} />
-          <FormButtons onSubmit={onSubmit} onCancel={onCancel} />
+        <CssBaseline />
+        <NavBar
+          title={criteria.name}
+          isDark={darkThemeEnabled}
+          setTheme={toggleThemeHandler}
+        />
+        {taskNames.length > 0 ? (
+          <>
+            <LinearProgress
+              variant="determinate"
+              sx={{ margin: 1, padding: 1, borderRadius: 1 }}
+              value={50}
+            />
+            <Tasks
+              taskNames={taskNames}
+              aspects={aspects}
+              onSubmit={onSubmit}
+              onCancel={onCancel}
+            />
+          </>
+        ) : (
+          <ErrorCard missing="feladatok"/>
+        )}
       </ThemeProvider>
     </>
   );
