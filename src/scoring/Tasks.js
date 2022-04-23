@@ -5,49 +5,71 @@ import { AspectTable } from "./AspectTable";
 import { Buttons } from "./Buttons";
 
 export function Tasks({
-  taskNames,
-  aspects,
-  onSubmit,
-  onCancel,
+  criteria,
   formState,
   addResult,
   removeResult,
+  setError,
+  clearError,
+  onSubmit,
+  onCancel,
 }) {
   const [tabIndex, setTabIndex] = useState("0");
   const switchTab = (e, newTabIndex) => setTabIndex(newTabIndex);
 
-  const stepRight = () => {
-    if (tabIndex === Number(taskNames.length - 1).toString()) {
+  const nextTask = () => {
+    if (tabIndex === Number(criteria.tasks.length - 1).toString()) {
       setTabIndex("0");
     } else {
       setTabIndex((Number(tabIndex) + 1).toString());
     }
   };
 
-  const stepLeft = () => {
+  const prevTask = () => {
     if (tabIndex === "0") {
-      setTabIndex(Number(taskNames.length - 1).toString());
+      setTabIndex(Number(criteria.tasks.length - 1).toString());
     } else {
       setTabIndex((Number(tabIndex) - 1).toString());
     }
   };
 
-  const tabs = taskNames.map((task, i) => (
-    <Tab key={i} label={task} value={i.toString()} />
+  const countFilledTask = (task) => {
+    let count = 0;
+    task.aspects.forEach((aspect) => {
+      let result = formState.results.find((result) => result.id === aspect.id);
+      if (result) {
+        count++;
+      }
+    });
+    return count;
+  };
+
+  const taskLabel = (task) => {
+    return (
+      task.name + " (" + countFilledTask(task) + "/" + task.aspects.length + ")"
+    );
+  };
+
+  const tabs = criteria.tasks.map((task, i) => (
+    <Tab key={i} label={taskLabel(task)} value={i.toString()} />
   ));
 
-  const tables = aspects.map((aspect, i) => {
-    return (
-      <TabPanel key={i} value={i.toString()}>
-        <AspectTable
-          aspects={aspect}
-          formState={formState}
-          addResult={addResult}
-          removeResult={removeResult}
-        />
-      </TabPanel>
-    );
-  });
+  const tables = criteria.tasks
+    .map((task) => task.aspects)
+    .map((aspect, i) => {
+      return (
+        <TabPanel key={i} value={i.toString()}>
+          <AspectTable
+            aspects={aspect}
+            formState={formState}
+            addResult={addResult}
+            removeResult={removeResult}
+            setError={setError}
+            clearError={clearError}
+          />
+        </TabPanel>
+      );
+    });
 
   return (
     <>
@@ -66,8 +88,8 @@ export function Tasks({
         <Buttons
           onSubmit={onSubmit}
           onCancel={onCancel}
-          onNext={stepRight}
-          onPrev={stepLeft}
+          onNext={nextTask}
+          onPrev={prevTask}
         />
       </TabContext>
     </>

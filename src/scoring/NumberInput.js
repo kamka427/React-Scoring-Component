@@ -1,15 +1,76 @@
 import { Box, Container, TextField, Typography } from "@mui/material";
-import { rootShouldForwardProp } from "@mui/material/styles/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const NumberInput = ({ aspect, formState, addResult, removeResult }) => {
+export const NumberInput = ({
+  aspect,
+  formState,
+  addResult,
+  removeResult,
+  setError,
+  clearError,
+}) => {
   const val = formState.results.find((result) => result.id === aspect.id);
+  const err = formState.errors.find((err) => err.id === aspect.id);
+
 
   const [value, setValue] = useState(val ? val.value : "");
+  const [errorLocal, setLocalError] = useState(err ? err.message : "");
+
+  const unsetError = () => {
+    clearError(aspect.id);
+    setLocalError("");
+  };
+
+  const addError = (error) => {
+    unsetError();
+    setError(error);
+    setLocalError(error.message);
+  };
+
+  const validateInput = (value) => {
+    unsetError();
+    if (aspect.required && value === "") {
+      addError({
+        id: aspect.id,
+        message: "Kötelező kitölteni!",
+      });
+      return false;
+    }
+
+    if (value !== "") {
+      if (isNaN(value)) {
+        addError({
+          id: aspect.id,
+          message: "Csak szám lehet!",
+        });
+        return false;
+      }
+      if (Number(value) > aspect.maxValue) {
+        addError({
+          id: aspect.id,
+          message: "Túl nagy pontszám!",
+        });
+        return false;
+      }
+      if (Number(value) < 0) {
+        addError({
+          id: aspect.id,
+          message: "Negatív pontszám!",
+        });
+        return false;
+      }
+    }
+    return true;
+  };
 
   const handleChange = (e) => {
-    setValue(e.target.value);
-    e.target.value === "" ? removeResult(e, aspect) : addResult(e, aspect);
+    const value = e.target.value;
+    setValue(value);
+    if (validateInput(value)) {
+      e.target.value !== ""
+        ? addResult(value, aspect.id)
+        : removeResult(aspect.id);
+    }
   };
 
   return (
@@ -32,15 +93,17 @@ export const NumberInput = ({ aspect, formState, addResult, removeResult }) => {
             size="small"
             required={aspect.required}
             label={aspect.required ? "Kötelező" : "Opcionális"}
-            value={value}
+            value={val !== undefined ? val.value : "" }
             onChange={handleChange}
+            error={err !== undefined }
+            helperText={err !== undefined ? err.message : ""}
           ></TextField>
 
           <Typography
             sx={{
               backgroundColor: "primary.main",
               color: "white",
-              alignSelf: "self-end",
+              alignSelf: "self-start",
               padding: 1,
               paddingX: 2,
               borderTopRightRadius: 7,

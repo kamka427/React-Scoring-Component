@@ -1,8 +1,6 @@
 import {
   Container,
   CssBaseline,
-  LinearProgress,
-  Typography,
 } from "@mui/material";
 import { Tasks } from "./Tasks";
 import { NavBar } from "./NavBar";
@@ -13,8 +11,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ErrorCard } from "./ErrorCard";
-import { Box } from "@mui/system";
-
+import { Status } from "./Status";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -35,17 +32,36 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     errors: [],
   });
 
-  const addResult = (e, aspect) => {
-    if (
-      formState.results.find((result) => result.id === aspect.id) === undefined
-    ) {
+  useEffect(() => {
+    if (formState.results.length === 0) {
+    criteria.tasks.forEach((task) => {
+      task.aspects.forEach((aspect) => {
+        if (aspect.type === "boolean") {
+          setFormState((prevState) => ({
+            ...prevState,
+            results: [
+              ...prevState.results,
+              {
+                id: aspect.id,
+                value: 0,
+              },
+            ],
+          }));
+        }
+      });
+    });
+  }
+  }, [setFormState, criteria, formState.results]);
+
+  const addResult = (value, id) => {
+    if (formState.results.find((result) => result.id === id) === undefined) {
       setFormState({
         ...formState,
         results: [
           ...formState.results,
           {
-            id: aspect.id,
-            value: Number(e.target.value),
+            id: id,
+            value: Number(value),
           },
         ],
       });
@@ -53,10 +69,10 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
       setFormState({
         ...formState,
         results: formState.results.map((result) => {
-          if (result.id === aspect.id) {
+          if (result.id === id) {
             return {
-              id: aspect.id,
-              value: Number(e.target.value),
+              id: id,
+              value: Number(value),
             };
           } else {
             return result;
@@ -66,30 +82,38 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     }
   };
 
-  const removeResult = (e, aspect) => {
+  const removeResult = (id) => {
     setFormState({
       ...formState,
-      results: formState.results.filter((result) => result.id !== aspect.id),
+      results: formState.results.filter((result) => result.id !== id),
     });
   };
 
   const setError = (error) => {
-    setFormState({
-      ...formState,
-      errors: [
-        ...formState.errors,
-        {
-          id: error.id,
-          message: error.message,
-        },
-      ],
-    });
+    if (formState.errors.find((e) => e.id === error.id) === undefined) {
+      setFormState({
+        ...formState,
+        errors: [...formState.errors, error],
+      });
+    }
+    else {
+      setFormState({
+        ...formState,
+        errors: formState.errors.map((e) => {
+          if (e.id === error.id) {
+            return error;
+          } else {
+            return e;
+          }
+        }),
+      });
+    }
   };
 
-  const clearError = (error) => {
+  const clearError = (id) => {
     setFormState({
       ...formState,
-      errors: formState.errors.filter((err) => err.id !== error.id),
+      errors: formState.errors.filter((err) => err.id !== id),
     });
   };
 
@@ -101,10 +125,6 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     onCancel({ results: formState.results });
   };
 
-  const taskNames = criteria.tasks.map((task) => task.name);
-
-  const taskAspects = criteria.tasks.map((task) => task.aspects);
-
   const [darkThemeEnabled, toggleTheme] = useState(false);
 
   const toggleThemeHandler = () => {
@@ -113,39 +133,62 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
 
   const theme = darkThemeEnabled ? darkTheme : lightTheme;
 
-  const aspectsReqCount = taskAspects.reduce((acc, cur) => {
-    return (
-      acc +
-      cur.reduce((acc, cur) => {
-        if (cur.required) {
-          return acc + 1;
-        }
-        return acc;
-      }, 0)
-    );
-  }, 0);
+  const aspectsReqCount = criteria.tasks
+    .map((task) => task.aspects)
+    .reduce((acc, cur) => {
+      return (
+        acc +
+        cur.reduce((acc, cur) => {
+          if (cur.required) {
+            return acc + 1;
+          }
+          return acc;
+        }, 0)
+      );
+    }, 0);
 
   const points = formState.results.reduce((acc, cur) => {
     return acc + cur.value;
   }, 0);
 
-  const maxReqPoints = taskAspects.reduce((acc, cur) => {
-    return (
-      acc +
-      cur.reduce((acc, cur) => {
-        if (cur.required) {
-          if (cur.type === "number") {
-            return acc + cur.maxValue;
-          } else if (cur.type === "boolean") {
-            return acc + cur.value;
-          } else if (cur.type === "list") {
-            return acc + Math.max(...Object.values(cur.values));
+  const maxReqPoints = criteria.tasks
+    .map((task) => task.aspects)
+    .reduce((acc, cur) => {
+      return (
+        acc +
+        cur.reduce((acc, cur) => {
+          if (cur.required) {
+            if (cur.type === "number") {
+              return acc + cur.maxValue;
+            } else if (cur.type === "boolean") {
+              return acc + cur.value;
+            } else if (cur.type === "list") {
+              return acc + Math.max(...Object.values(cur.values));
+            }
           }
-        }
-        return acc;
-      }, 0)
-    );
-  }, 0);
+          return acc;
+        }, 0)
+      );
+    }, 0);
+
+  const booleanCount = criteria.tasks
+    .map((task) => task.aspects)
+    .reduce((acc, cur) => {
+      return (
+        acc +
+        cur.reduce((acc, cur) => {
+          if (cur.type === "boolean") {
+            return acc + 1;
+          }
+          return acc;
+        }, 0)
+      );
+    }, 0);
+
+
+
+  const progress = Math.min(formState.results.length - booleanCount, maxReqPoints);
+
 
   return (
     <>
@@ -156,44 +199,22 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
           isDark={darkThemeEnabled}
           setTheme={toggleThemeHandler}
         />
-        {taskNames.length > 0 ? (
+        {criteria.tasks.map((task) => task.name).length > 0 ? (
           <>
             <Container>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-              >
-                {`${points}/${maxReqPoints}`}p
-              </Typography>
-                <Box sx={{ width: "100%", mr: 1 }}>
-                  <LinearProgress
-                    variant="determinate"
-                    sx={{ margin: 1, padding: 1, borderRadius: 1 }}
-                    value={Math.min(
-                      (formState.results.length / aspectsReqCount) * 100,
-                      100
-                    )}
-                  />
-                </Box>
-                <Box sx={{ minWidth: 35 }}>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                  >{`${Math.round(
-                    Math.min(
-                      (formState.results.length / aspectsReqCount) * 100,
-                      100
-                    )
-                  )}%`}</Typography>
-                </Box>
-              </Box>
+              <Status
+                points={points}
+                maxReqPoints={maxReqPoints}
+                filledCount={progress}
+                aspectsReqCount={aspectsReqCount}
+              />
               <Tasks
-                taskNames={taskNames}
-                aspects={taskAspects}
+                criteria={criteria}
                 formState={formState}
                 addResult={addResult}
                 removeResult={removeResult}
+                setError={setError}
+                clearError={clearError}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
               />

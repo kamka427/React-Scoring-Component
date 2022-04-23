@@ -5,11 +5,9 @@ import {
   TableBody,
   TableRow,
   TableHead,
-  LinearProgress,
 } from "@mui/material";
 import { BooleanInput } from "./BooleanInput";
 import { ErrorCard } from "./ErrorCard";
-import { ListInput } from "./ListInput";
 import { NumberInput } from "./NumberInput";
 import { SelectInput } from "./SelectInput";
 
@@ -18,6 +16,8 @@ export const AspectTable = ({
   formState,
   addResult,
   removeResult,
+  setError,
+  clearError,
 }) => {
   const rows = aspects.map((aspect, i) => {
     let component;
@@ -30,6 +30,8 @@ export const AspectTable = ({
             formState={formState}
             addResult={addResult}
             removeResult={removeResult}
+            setError={setError}
+            clearError={clearError}
           />
         );
         break;
@@ -41,6 +43,8 @@ export const AspectTable = ({
             formState={formState}
             addResult={addResult}
             removeResult={removeResult}
+            setError={setError}
+            clearError={clearError}
           />
         );
         break;
@@ -52,6 +56,8 @@ export const AspectTable = ({
             formState={formState}
             addResult={addResult}
             removeResult={removeResult}
+            setError={setError}
+            clearError={clearError}
           />
         );
         break;
