@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 export const SelectInput = ({
   aspect,
@@ -16,7 +16,6 @@ export const SelectInput = ({
   addResult,
   removeResult,
   setError,
-  clearError,
 }) => {
   const items = Object.keys(aspect.values).map((key, index) => {
     return {
@@ -28,24 +27,11 @@ export const SelectInput = ({
   const val = formState.results.find((result) => result.id === aspect.id);
   const err = formState.errors.find((err) => err.id === aspect.id);
 
-  const [value, setValue] = useState(val ? val.value : "");
-  const [errorLocal, setLocalError] = useState(err ? err.message : "");
-
-  const unsetError = () => {
-    clearError(aspect.id);
-    setLocalError("");
-  };
-
-  const addError = (error) => {
-    unsetError();
-    setError(error);
-    setLocalError(error.message);
-  };
+  const [selection, setSelection] = useState(val ? val.value : "");
 
   const validateInput = (value) => {
-    unsetError();
     if (aspect.required && value === "") {
-      addError({
+      setError({
         id: aspect.id,
         message: "Kötelező kitölteni!",
       });
@@ -56,10 +42,14 @@ export const SelectInput = ({
 
   const handleChange = (e) => {
     const value = e.target.value;
-    setValue(value);
+    setSelection(value);
     if (validateInput(value)) {
-      e.target.value !== ""
-        ? addResult(value, aspect.id)
+      console.log(value);
+      value !== ""
+        ? addResult({
+            id: aspect.id,
+            value: Number(value),
+          })
         : removeResult(aspect.id);
     }
   };
@@ -92,15 +82,21 @@ export const SelectInput = ({
           <FormControl
             required={aspect.required}
             sx={{ minWidth: 120 }}
-            error={errorLocal !== ""}
+            error={err !== undefined}
           >
             <InputLabel>Értékelés</InputLabel>
-            <Select label="Értékelés" value={value} onChange={handleChange}>
+            <Select
+              label="Értékelés"
+              value={
+               selection
+              }
+              onChange={handleChange}
+            >
               {list}
-              <MenuItem value="">Törlés</MenuItem>
+              <MenuItem value="">Üres</MenuItem>
             </Select>
             <FormHelperText>
-              {errorLocal !== "" ? errorLocal : ""}
+              {err !== undefined ? err.message : ""}
             </FormHelperText>
           </FormControl>
           <Typography

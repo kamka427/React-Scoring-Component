@@ -1,7 +1,4 @@
-import {
-  Container,
-  CssBaseline,
-} from "@mui/material";
+import { Container, CssBaseline } from "@mui/material";
 import { Tasks } from "./Tasks";
 import { NavBar } from "./NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -12,6 +9,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ErrorCard } from "./ErrorCard";
 import { Status } from "./Status";
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -34,50 +32,43 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
 
   useEffect(() => {
     if (formState.results.length === 0) {
-    criteria.tasks.forEach((task) => {
-      task.aspects.forEach((aspect) => {
-        if (aspect.type === "boolean") {
-          setFormState((prevState) => ({
-            ...prevState,
-            results: [
-              ...prevState.results,
-              {
-                id: aspect.id,
-                value: 0,
-              },
-            ],
-          }));
-        }
+      criteria.tasks.forEach((task) => {
+        task.aspects.forEach((aspect) => {
+          if (aspect.type === "boolean") {
+            setFormState((prevState) => ({
+              ...prevState,
+              results: [
+                ...prevState.results,
+                {
+                  id: aspect.id,
+                  value: 0,
+                },
+              ],
+            }));
+          }
+        });
       });
-    });
-  }
+    }
   }, [setFormState, criteria, formState.results]);
 
-  const addResult = (value, id) => {
-    if (formState.results.find((result) => result.id === id) === undefined) {
+  const addResult = (result) => {
+    if (formState.results.find((res) => res.id === result.id) === undefined) {
       setFormState({
         ...formState,
-        results: [
-          ...formState.results,
-          {
-            id: id,
-            value: Number(value),
-          },
-        ],
+        results: [...formState.results, result],
+        errors: formState.errors.filter((err) => err.id !== result.id),
       });
     } else {
       setFormState({
         ...formState,
-        results: formState.results.map((result) => {
-          if (result.id === id) {
-            return {
-              id: id,
-              value: Number(value),
-            };
-          } else {
+        results: formState.results.map((res) => {
+          if (res.id === result.id) {
             return result;
+          } else {
+            return res;
           }
         }),
+        errors: formState.errors.filter((err) => err.id !== result.id),
       });
     }
   };
@@ -93,12 +84,13 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     if (formState.errors.find((e) => e.id === error.id) === undefined) {
       setFormState({
         ...formState,
+        results: formState.results.filter((result) => result.id !== error.id),
         errors: [...formState.errors, error],
       });
-    }
-    else {
+    } else {
       setFormState({
         ...formState,
+        results: formState.results.filter((result) => result.id !== error.id),
         errors: formState.errors.map((e) => {
           if (e.id === error.id) {
             return error;
@@ -110,13 +102,6 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     }
   };
 
-  const clearError = (id) => {
-    setFormState({
-      ...formState,
-      errors: formState.errors.filter((err) => err.id !== id),
-    });
-  };
-
   const handleSubmit = () => {
     onSubmit({ results: formState.results });
   };
@@ -125,7 +110,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     onCancel({ results: formState.results });
   };
 
-  const [darkThemeEnabled, toggleTheme] = useState(false);
+  const [darkThemeEnabled, toggleTheme] = useState(true);
 
   const toggleThemeHandler = () => {
     toggleTheme(!darkThemeEnabled);
@@ -185,10 +170,10 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
       );
     }, 0);
 
-
-
-  const progress = Math.min(formState.results.length - booleanCount, maxReqPoints);
-
+  const progress = Math.min(
+    formState.results.length - booleanCount,
+    maxReqPoints
+  );
 
   return (
     <>
@@ -214,7 +199,6 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
                 addResult={addResult}
                 removeResult={removeResult}
                 setError={setError}
-                clearError={clearError}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
               />

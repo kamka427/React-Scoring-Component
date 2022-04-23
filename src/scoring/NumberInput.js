@@ -1,5 +1,5 @@
 import { Box, Container, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 
 export const NumberInput = ({
   aspect,
@@ -12,49 +12,37 @@ export const NumberInput = ({
   const val = formState.results.find((result) => result.id === aspect.id);
   const err = formState.errors.find((err) => err.id === aspect.id);
 
-
   const [value, setValue] = useState(val ? val.value : "");
-  const [errorLocal, setLocalError] = useState(err ? err.message : "");
-
-  const unsetError = () => {
-    clearError(aspect.id);
-    setLocalError("");
-  };
-
-  const addError = (error) => {
-    unsetError();
-    setError(error);
-    setLocalError(error.message);
-  };
 
   const validateInput = (value) => {
-    unsetError();
     if (aspect.required && value === "") {
-      addError({
+      setError({
         id: aspect.id,
         message: "Kötelező kitölteni!",
       });
       return false;
     }
-
     if (value !== "") {
       if (isNaN(value)) {
-        addError({
+        setError({
           id: aspect.id,
+          value: value,
           message: "Csak szám lehet!",
         });
         return false;
       }
       if (Number(value) > aspect.maxValue) {
-        addError({
+        setError({
           id: aspect.id,
+          value: value,
           message: "Túl nagy pontszám!",
         });
         return false;
       }
       if (Number(value) < 0) {
-        addError({
+        setError({
           id: aspect.id,
+          value: value,
           message: "Negatív pontszám!",
         });
         return false;
@@ -67,8 +55,11 @@ export const NumberInput = ({
     const value = e.target.value;
     setValue(value);
     if (validateInput(value)) {
-      e.target.value !== ""
-        ? addResult(value, aspect.id)
+      value !== ""
+        ? addResult({
+            id: aspect.id,
+            value: Number(value),
+          })
         : removeResult(aspect.id);
     }
   };
@@ -93,9 +84,9 @@ export const NumberInput = ({
             size="small"
             required={aspect.required}
             label={aspect.required ? "Kötelező" : "Opcionális"}
-            value={val !== undefined ? val.value : "" }
+            defaultValue={err !== undefined ? err.value : value ? value : ""}
             onChange={handleChange}
-            error={err !== undefined }
+            error={err !== undefined}
             helperText={err !== undefined ? err.message : ""}
           ></TextField>
 

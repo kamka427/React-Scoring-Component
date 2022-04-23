@@ -10,7 +10,6 @@ export function Tasks({
   addResult,
   removeResult,
   setError,
-  clearError,
   onSubmit,
   onCancel,
 }) {
@@ -65,7 +64,6 @@ export function Tasks({
             addResult={addResult}
             removeResult={removeResult}
             setError={setError}
-            clearError={clearError}
           />
         </TabPanel>
       );

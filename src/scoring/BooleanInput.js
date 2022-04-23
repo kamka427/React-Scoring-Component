@@ -1,21 +1,16 @@
 import { Box, Checkbox, Container, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export const BooleanInput = ({
-  aspect,
-  formState,
-  addResult,
-}) => {
-
+export const BooleanInput = ({ aspect, formState, addResult }) => {
   const val = formState.results.find((result) => result.id === aspect.id);
 
-  const [value, setValue] = useState(
-    val.val>0 ? true : false
-  );
+  const [value, setValue] = useState(val.val > 0 ? true : false);
 
   const handleChange = (e) => {
     setValue(e.target.checked);
-    e.target.checked ? addResult(e.target.value, aspect.id) : addResult(0, aspect.id);
+    e.target.checked
+      ? addResult(e.target.value, aspect.id)
+      : addResult(0, aspect.id);
     console.log(formState.results);
   };
 

@@ -17,7 +17,6 @@ export const AspectTable = ({
   addResult,
   removeResult,
   setError,
-  clearError,
 }) => {
   const rows = aspects.map((aspect, i) => {
     let component;
@@ -31,7 +30,6 @@ export const AspectTable = ({
             addResult={addResult}
             removeResult={removeResult}
             setError={setError}
-            clearError={clearError}
           />
         );
         break;
@@ -44,7 +42,6 @@ export const AspectTable = ({
             addResult={addResult}
             removeResult={removeResult}
             setError={setError}
-            clearError={clearError}
           />
         );
         break;
@@ -57,7 +54,6 @@ export const AspectTable = ({
             addResult={addResult}
             removeResult={removeResult}
             setError={setError}
-            clearError={clearError}
           />
         );
         break;
