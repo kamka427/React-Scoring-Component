@@ -124,13 +124,15 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     return (
       acc +
       cur.reduce((acc, cur) => {
-        if (cur.type === "number") {
+        if(cur.required) {
+        if ( cur.type === "number") {
           return acc + cur.maxValue;
         } else if (cur.type === "boolean") {
           return acc + cur.value;
         } else if (cur.type === "list") {
           return acc + Math.max(...Object.values(cur.values));
         }
+      }
         return acc;
       }, 0)
     );

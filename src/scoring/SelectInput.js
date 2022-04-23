@@ -46,21 +46,21 @@ export const SelectInput = ({ aspect, formState, addResult, removeResult }) => {
           justifyContent: "center",
         }}
       >
-          <Box
+        <Box
           sx={{
             display: "flex",
             alignItems: "center",
             borderRadius: 2,
           }}
         >
-        <FormControl sx={{ minWidth: 120}}>
-          <InputLabel>Értékelés</InputLabel>
-          <Select label="Értékelés" value={value} onChange={handleChange}>
-            {list}
-            <MenuItem value="">Törlés</MenuItem>
-          </Select>
-        </FormControl>
-        <Typography
+          <FormControl required={aspect.required} sx={{ minWidth: 120 }}>
+            <InputLabel>Értékelés</InputLabel>
+            <Select label="Értékelés" value={value} onChange={handleChange}>
+              {list}
+              <MenuItem value="">Törlés</MenuItem>
+            </Select>
+          </FormControl>
+          <Typography
             sx={{
               backgroundColor: "primary.main",
               color: "white",
@@ -73,7 +73,7 @@ export const SelectInput = ({ aspect, formState, addResult, removeResult }) => {
           >
             / {maxValue}
           </Typography>
-          </Box>
+        </Box>
       </Container>
     </>
   );
