@@ -13,6 +13,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ErrorCard } from "./ErrorCard";
+import { Box } from "@mui/system";
 
 const darkTheme = createTheme({
   palette: {
@@ -112,27 +113,35 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
 
   const theme = darkThemeEnabled ? darkTheme : lightTheme;
 
-  const aspectsCount = taskAspects.reduce((acc, cur) => {
-    return acc + cur.length;
+  const aspectsReqCount = taskAspects.reduce((acc, cur) => {
+    return (
+      acc +
+      cur.reduce((acc, cur) => {
+        if (cur.required) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0)
+    );
   }, 0);
 
   const points = formState.results.reduce((acc, cur) => {
     return acc + cur.value;
   }, 0);
 
-  const maxPoints = taskAspects.reduce((acc, cur) => {
+  const maxReqPoints = taskAspects.reduce((acc, cur) => {
     return (
       acc +
       cur.reduce((acc, cur) => {
-        if(cur.required) {
-        if ( cur.type === "number") {
-          return acc + cur.maxValue;
-        } else if (cur.type === "boolean") {
-          return acc + cur.value;
-        } else if (cur.type === "list") {
-          return acc + Math.max(...Object.values(cur.values));
+        if (cur.required) {
+          if (cur.type === "number") {
+            return acc + cur.maxValue;
+          } else if (cur.type === "boolean") {
+            return acc + cur.value;
+          } else if (cur.type === "list") {
+            return acc + Math.max(...Object.values(cur.values));
+          }
         }
-      }
         return acc;
       }, 0)
     );
@@ -150,15 +159,35 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
         {taskNames.length > 0 ? (
           <>
             <Container>
-              <LinearProgress
-                variant="determinate"
-                sx={{ margin: 1, padding: 1, borderRadius: 1 }}
-                value={(formState.results.length / aspectsCount) * 100}
-              />
-              <Typography variant="h6" gutterBottom>
-                {" "}
-                {`${points}/${maxPoints}`}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+              >
+                {`${points}/${maxReqPoints}`}p
               </Typography>
+                <Box sx={{ width: "100%", mr: 1 }}>
+                  <LinearProgress
+                    variant="determinate"
+                    sx={{ margin: 1, padding: 1, borderRadius: 1 }}
+                    value={Math.min(
+                      (formState.results.length / aspectsReqCount) * 100,
+                      100
+                    )}
+                  />
+                </Box>
+                <Box sx={{ minWidth: 35 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                  >{`${Math.round(
+                    Math.min(
+                      (formState.results.length / aspectsReqCount) * 100,
+                      100
+                    )
+                  )}%`}</Typography>
+                </Box>
+              </Box>
               <Tasks
                 taskNames={taskNames}
                 aspects={taskAspects}
