@@ -28,7 +28,6 @@ export const NumberInput = ({ aspect, formState, addResult, removeResult }) => {
           }}
         >
           <TextField
-            type="number"
             variant="outlined"
             size="small"
             required={aspect.required}

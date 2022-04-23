@@ -11,6 +11,7 @@ import { BooleanInput } from "./BooleanInput";
 import { ErrorCard } from "./ErrorCard";
 import { ListInput } from "./ListInput";
 import { NumberInput } from "./NumberInput";
+import { SelectInput } from "./SelectInput";
 
 export const AspectTable = ({
   aspects,
@@ -34,7 +35,7 @@ export const AspectTable = ({
         break;
       case "list":
         component = (
-          <ListInput
+          <SelectInput
             key={i}
             aspect={aspect}
             formState={formState}

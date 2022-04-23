@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ListBox } from "./ListBox";
 
 export const ListInput = ({ aspect, formState, addResult, removeResult }) => {
-  console.log(formState);
 
   const items = Object.keys(aspect.values).map((key, index) => {
     return {

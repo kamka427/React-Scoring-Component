@@ -1,4 +1,9 @@
-import { CssBaseline, LinearProgress, Typography } from "@mui/material";
+import {
+  Container,
+  CssBaseline,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import { Tasks } from "./Tasks";
 import { NavBar } from "./NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -67,6 +72,26 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     });
   };
 
+  const setError = (error) => {
+    setFormState({
+      ...formState,
+      errors: [
+        ...formState.errors,
+        {
+          id: error.id,
+          message: error.message,
+        },
+      ],
+    });
+  };
+
+  const clearError = (error) => {
+    setFormState({
+      ...formState,
+      errors: formState.errors.filter((err) => err.id !== error.id),
+    });
+  };
+
   const handleSubmit = () => {
     onSubmit({ results: formState.results });
   };
@@ -96,18 +121,19 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
   }, 0);
 
   const maxPoints = taskAspects.reduce((acc, cur) => {
-    return acc + cur.reduce((acc, cur) => {
-    console.log(cur);
-    if(cur.type === "number") {
-      return acc + cur.maxValue;
-    }
-    else if(cur.type === "boolean") {
-      return acc + cur.value;
-    }
-    else if( cur.type === "list") {
-      return acc + Math.max(...Object.values(cur.values));
-    }
-  }, 0);
+    return (
+      acc +
+      cur.reduce((acc, cur) => {
+        if (cur.type === "number") {
+          return acc + cur.maxValue;
+        } else if (cur.type === "boolean") {
+          return acc + cur.value;
+        } else if (cur.type === "list") {
+          return acc + Math.max(...Object.values(cur.values));
+        }
+        return acc;
+      }, 0)
+    );
   }, 0);
 
   return (
@@ -121,24 +147,26 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
         />
         {taskNames.length > 0 ? (
           <>
-            <LinearProgress
-              variant="determinate"
-              sx={{ margin: 1, padding: 1, borderRadius: 1 }}
-              value={(formState.results.length / aspectsCount) * 100}
-            />
-            <Typography variant="h6" gutterBottom>
-              {" "}
-              {`${points}/${maxPoints}`}
-            </Typography>
-            <Tasks
-              taskNames={taskNames}
-              aspects={taskAspects}
-              formState={formState}
-              addResult={addResult}
-              removeResult={removeResult}
-              onSubmit={handleSubmit}
-              onCancel={handleCancel}
-            />
+            <Container>
+              <LinearProgress
+                variant="determinate"
+                sx={{ margin: 1, padding: 1, borderRadius: 1 }}
+                value={(formState.results.length / aspectsCount) * 100}
+              />
+              <Typography variant="h6" gutterBottom>
+                {" "}
+                {`${points}/${maxPoints}`}
+              </Typography>
+              <Tasks
+                taskNames={taskNames}
+                aspects={taskAspects}
+                formState={formState}
+                addResult={addResult}
+                removeResult={removeResult}
+                onSubmit={handleSubmit}
+                onCancel={handleCancel}
+              />
+            </Container>
           </>
         ) : (
           <ErrorCard missing="feladatok" />

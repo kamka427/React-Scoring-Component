@@ -14,7 +14,6 @@ export const BooleanInput = ({
   const handleChange = (e) => {
     setValue(e.target.checked);
     e.target.checked ? addResult(e, aspect) : removeResult(e, aspect);
-    console.log(formState.results.length);
   };
 
   return (
