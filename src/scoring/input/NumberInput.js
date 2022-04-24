@@ -15,6 +15,7 @@ export const NumberInput = ({
     if (aspect.required && value === "") {
       setError({
         id: aspect.id,
+        aspect: aspect,
         message: "Kötelező kitölteni!",
       });
       return false;
@@ -24,6 +25,7 @@ export const NumberInput = ({
         setError({
           id: aspect.id,
           value: value,
+          aspect: aspect,
           message: "Csak szám lehet!",
         });
         return false;
@@ -32,6 +34,7 @@ export const NumberInput = ({
         setError({
           id: aspect.id,
           value: value,
+          aspect: aspect,
           message: "Túl nagy pontszám!",
         });
         return false;
@@ -40,6 +43,7 @@ export const NumberInput = ({
         setError({
           id: aspect.id,
           value: value,
+          aspect: aspect,
           message: "Negatív pontszám!",
         });
         return false;
@@ -81,7 +85,7 @@ export const NumberInput = ({
             size="small"
             required={aspect.required}
             label={aspect.required ? "Kötelező" : "Opcionális"}
-            defaultValue={err !== undefined ? err.value : value ? value : ""}
+            value={err !== undefined ? err.value : value ? value : ""}
             onChange={handleChange}
             error={err !== undefined}
             helperText={err !== undefined ? err.message : ""}

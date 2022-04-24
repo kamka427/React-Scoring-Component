@@ -1,4 +1,14 @@
-import { Container, CssBaseline } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonGroup,
+  Container,
+  CssBaseline,
+  IconButton,
+  Modal,
+  Typography,
+} from "@mui/material";
 import { Tasks } from "./main/Tasks";
 import { NavBar } from "./main/NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -9,6 +19,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ErrorCard } from "./ErrorCard";
 import { Status } from "./main/Status";
+import { ErrorModal } from "./main/ErrorModal";
 
 const darkTheme = createTheme({
   palette: {
@@ -196,6 +207,41 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
 
   const canSubmit = aspectsReqCount === reqFilled;
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleOpen = () => setModalOpen(true);
+  const handleClose = () => setModalOpen(false);
+
+  const errorList = formState.errors.map((err,i) => {
+    
+    return (
+      <>
+        <Alert
+          sx={{ marginTop: 2, maxWidth: "25%", alignSelf: "right" }}
+          severity="error"
+          variant="outlined"
+          action={
+            <Button color="inherit" size="small" onClick={handleOpen}>
+              Megnyitás
+            </Button>
+          }
+        >
+          {err.message}
+        </Alert>
+        <ErrorModal
+          modalOpen={modalOpen}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          addResult={addResult}
+          removeResult={removeResult}
+          setError={setError}
+          error={err}
+          formState={formState}
+          aspect={err.aspect}
+        />
+      </>
+    );
+  });
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -208,6 +254,15 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
         {criteria.tasks.map((task) => task.name).length > 0 ? (
           <>
             <Container>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "end",
+                }}
+              >
+                {errorList}
+              </Box>
               <Status
                 points={points}
                 maxReqPoints={maxReqPoints}

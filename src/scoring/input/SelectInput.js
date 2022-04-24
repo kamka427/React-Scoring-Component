@@ -47,6 +47,7 @@ export const SelectInput = ({
       value !== ""
       ? addResult({
         id: aspect.id,
+        aspect: aspect,
         value: Number(value),
       })
       : removeResult(aspect.id);

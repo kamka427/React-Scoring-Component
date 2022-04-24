@@ -5,7 +5,6 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIosNew";
 export const Buttons = ({ onSubmit, onCancel, onNext, onPrev, canSubmit }) => {
   return (
     <>
-      <Divider variant="middle" />
       <Container
         sx={{ display: "flex", justifyContent: "center", marginTop: 2, gap: 6 }}
       >
