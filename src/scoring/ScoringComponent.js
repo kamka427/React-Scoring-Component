@@ -1,26 +1,15 @@
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonGroup,
-  Container,
-  CssBaseline,
-  IconButton,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Container, CssBaseline } from "@mui/material";
 import { Tasks } from "./main/Tasks";
 import { NavBar } from "./main/NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { ErrorCard } from "./main/ErrorCard";
+import { ErrorCard } from "./error/ErrorCard";
 import { Status } from "./main/Status";
-import { ErrorModal } from "./main/ErrorModal";
-import { forceReRender } from "@storybook/react";
+import { ErrorModal } from "./error/ErrorModal";
 
 const darkTheme = createTheme({
   palette: {
@@ -41,27 +30,6 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     results: [],
     errors: [],
   });
-
-  // useEffect(() => {
-  //   if (formState.results.length === 0) {
-  //     criteria.tasks.forEach((task) => {
-  //       task.aspects.forEach((aspect) => {
-  //         if (aspect.type === "boolean") {
-  //           setFormState((prevState) => ({
-  //             ...prevState,
-  //             results: [
-  //               ...prevState.results,
-  //               {
-  //                 id: aspect.id,
-  //                 value: 0,
-  //               },
-  //             ],
-  //           }));
-  //         }
-  //       });
-  //     });
-  //   }
-  // }, [setFormState, criteria, formState.results]);
 
   const addResult = (result) => {
     if (formState.results.find((res) => res.id === result.id) === undefined) {
@@ -132,18 +100,24 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
       });
     });
     data.results.sort((a, b) => a.id - b.id);
-    onSubmit(JSON.stringify(data));
+    //onSubmit(JSON.stringify(data));
+    onSubmit(data);
   };
 
   const handleCancel = () => {
     let data = {
       results: [...formState.results],
     };
+    data.results = data.results.filter((result) => {
+      return formState.errors.find((err) => err.id === result.id) === undefined;
+    });
+
     data.results.sort((a, b) => a.id - b.id);
-    onCancel(JSON.stringify(data));
+    // onCancel(JSON.stringify(data));
+    onCancel(data);
   };
 
-  const [darkThemeEnabled, toggleTheme] = useState(true);
+  const [darkThemeEnabled, toggleTheme] = useState(false);
 
   const toggleThemeHandler = () => {
     toggleTheme(!darkThemeEnabled);
@@ -213,11 +187,15 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
   const handleClose = () => setModalOpen(false);
 
   const errorList = formState.errors.map((err, i) => {
-    console.log(err.aspect);
+    let taskName = criteria.tasks.find((task) => {
+      return (
+        task.aspects.find((aspect) => aspect.id === err.aspect.id) !== undefined
+      );
+    }).name;
+
     return (
-      <>
+      <Box key={i} sx={{ marginTop: 2, minWidth: "60%" }}>
         <Alert
-          sx={{ marginTop: 2, minWidth: "50%" }}
           severity="error"
           variant="outlined"
           action={
@@ -226,22 +204,22 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
             </Button>
           }
         >
-          {err.message}
+          {taskName} / {err.aspect.name}: {err.message}
         </Alert>
-        {
-          <ErrorModal
-            modalOpen={modalOpen}
-            handleOpen={handleOpen}
-            handleClose={handleClose}
-            addResult={addResult}
-            removeResult={removeResult}
-            setError={setError}
-            formState={formState}
-            err={err}
-            aspect={err.aspect}
-          />
-        }
-      </>
+
+        <ErrorModal
+          modalOpen={modalOpen}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          addResult={addResult}
+          removeResult={removeResult}
+          setError={setError}
+          taskName={taskName}
+          val={err.value}
+          err={err}
+          aspect={err.aspect}
+        />
+      </Box>
     );
   });
 

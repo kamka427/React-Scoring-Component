@@ -3,11 +3,10 @@ import {
   Checkbox,
   Container,
   Divider,
-  fabClasses,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const BooleanInput = ({ aspect, val, addResult, removeResult }) => {
   const [value, setValue] = useState(val && val > 0 ? true : false);
@@ -45,21 +44,24 @@ export const BooleanInput = ({ aspect, val, addResult, removeResult }) => {
             value={aspect.value}
           />
           <Divider orientation="vertical" variant="middle" flexItem />
-          <Tooltip title={aspect.description ?? "Nincs leírása"} placement="right" arrow>
-
-          <Typography
-            sx={{
-              backgroundColor: "primary.main",
-              color: "white",
-              height: "100%",
-              paddingX: 2,
-              paddingTop: 1,
-              borderTopRightRadius: 7,
-              borderBottomRightRadius: 7,
-            }}
+          <Tooltip
+            title={aspect.description ?? "Nincs leírása"}
+            placement="right"
+            arrow
           >
-            {aspect.value}
-          </Typography>
+            <Typography
+              sx={{
+                backgroundColor: "primary.main",
+                color: "white",
+                height: "100%",
+                paddingX: 2,
+                paddingTop: 1,
+                borderTopRightRadius: 7,
+                borderBottomRightRadius: 7,
+              }}
+            >
+              {aspect.value}
+            </Typography>
           </Tooltip>
         </Box>
       </Container>

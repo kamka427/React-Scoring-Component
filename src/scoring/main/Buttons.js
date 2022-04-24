@@ -12,7 +12,12 @@ export const Buttons = ({ onSubmit, onCancel, onNext, onPrev, canSubmit }) => {
           <ArrowBackIosIcon />
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-          <Button variant="contained" color="success" onClick={onSubmit} disabled={!canSubmit}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={onSubmit}
+            disabled={!canSubmit}
+          >
             Mentés
           </Button>
           <Divider orientation="vertical" variant="middle" flexItem />

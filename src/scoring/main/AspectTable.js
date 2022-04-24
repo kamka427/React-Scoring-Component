@@ -5,10 +5,9 @@ import {
   TableBody,
   TableRow,
   TableHead,
-  Tooltip,
 } from "@mui/material";
 import { BooleanInput } from "../input/BooleanInput";
-import { ErrorCard } from "./ErrorCard";
+import { ErrorCard } from "../error/ErrorCard";
 import { NumberInput } from "../input/NumberInput";
 import { SelectInput } from "../input/SelectInput";
 
@@ -76,10 +75,7 @@ export const AspectTable = ({
         ) : (
           <TableCell align="center">{aspect.name}</TableCell>
         )}
-        <TableCell align="center">
-          {component}
-          
-          </TableCell>
+        <TableCell align="center">{component}</TableCell>
         {aspect.description ? (
           <TableCell align="center">{aspect.description}</TableCell>
         ) : (

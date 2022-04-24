@@ -1,24 +1,23 @@
 import { Modal, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect } from "react";
-import { BooleanInput } from "../input/BooleanInput";
 import { NumberInput } from "../input/NumberInput";
 import { SelectInput } from "../input/SelectInput";
 
 export const ErrorModal = ({
   aspect,
-  formState,
+  val,
   addResult,
   removeResult,
   setError,
   modalOpen,
   handleClose,
   err,
+  taskName,
 }) => {
   useEffect(() => {
     handleClose();
   }, []);
-  let val = formState.results.find((result) => result.id === aspect.id);
   let component;
 
   switch (aspect.type) {
@@ -46,8 +45,8 @@ export const ErrorModal = ({
         />
       );
       break;
-      default:
-        break;
+    default:
+      break;
   }
 
   return (
@@ -69,7 +68,7 @@ export const ErrorModal = ({
           variant="body1"
           sx={{ textAlign: "center", marginBottom: 3 }}
         >
-          Text in a modal
+          {taskName}/{aspect.name}
         </Typography>
         {component}
       </Box>

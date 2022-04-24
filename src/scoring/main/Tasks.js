@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Container, Divider, Tab } from "@mui/material";
+import { Divider, Tab } from "@mui/material";
 import { useState } from "react";
 import { AspectTable } from "./AspectTable";
 import { Buttons } from "./Buttons";
@@ -87,10 +87,6 @@ export function Tasks({
         </TabPanel>
       );
     });
-
-
-
-    
 
   return (
     <>
