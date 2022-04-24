@@ -9,10 +9,11 @@ import {
 import { useState } from "react";
 
 export const BooleanInput = ({ aspect, val, addResult, removeResult }) => {
-  const [value, setValue] = useState(val && val > 0 ? true : false);
+  const [value, setValue] = useState(val ? true : false);
 
   const handleChange = (e) => {
     setValue(e.target.checked);
+    const value = e.target.value;
     e.target.checked
       ? addResult({
           id: aspect.id,

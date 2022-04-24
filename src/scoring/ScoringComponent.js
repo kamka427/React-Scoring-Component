@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Container, CssBaseline } from "@mui/material";
+import { Box, Container, CssBaseline } from "@mui/material";
 import { Tasks } from "./main/Tasks";
 import { NavBar } from "./main/NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -9,7 +9,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ErrorCard } from "./error/ErrorCard";
 import { Status } from "./main/Status";
-import { ErrorModal } from "./error/ErrorModal";
+import { ErrorList } from "./error/ErrorList";
 
 const darkTheme = createTheme({
   palette: {
@@ -182,47 +182,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
 
   const canSubmit = aspectsReqCount === reqFilled;
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const handleOpen = () => setModalOpen(true);
-  const handleClose = () => setModalOpen(false);
-
-  const errorList = formState.errors.map((err, i) => {
-    let taskName = criteria.tasks.find((task) => {
-      return (
-        task.aspects.find((aspect) => aspect.id === err.aspect.id) !== undefined
-      );
-    }).name;
-
-    return (
-      <Box key={i} sx={{ marginTop: 2, minWidth: "60%" }}>
-        <Alert
-          severity="error"
-          variant="outlined"
-          action={
-            <Button color="inherit" size="small" onClick={handleOpen}>
-              Megnyitás
-            </Button>
-          }
-        >
-          {taskName} / {err.aspect.name}: {err.message}
-        </Alert>
-
-        <ErrorModal
-          modalOpen={modalOpen}
-          handleOpen={handleOpen}
-          handleClose={handleClose}
-          addResult={addResult}
-          removeResult={removeResult}
-          setError={setError}
-          taskName={taskName}
-          val={err.value}
-          err={err}
-          aspect={err.aspect}
-        />
-      </Box>
-    );
-  });
-
+  
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -260,7 +220,13 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
                   alignItems: "center",
                 }}
               >
-                {errorList}
+                <ErrorList formState={formState}
+                  criteria={criteria}
+                  addResult={addResult}
+                  removeResult={removeResult}
+                  setError={setError}
+
+                />
               </Box>
             </Container>
           </>

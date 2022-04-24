@@ -26,7 +26,7 @@ export const NumberInput = ({
           id: aspect.id,
           value: value,
           aspect: aspect,
-          message: "Csak szám lehet!",
+          message: "Csak számot adjon meg!",
         });
         return false;
       }
@@ -35,7 +35,7 @@ export const NumberInput = ({
           id: aspect.id,
           value: value,
           aspect: aspect,
-          message: "Túl nagy pontszám!",
+          message: "A maximum érték: " + aspect.maxValue,
         });
         return false;
       }
@@ -44,7 +44,7 @@ export const NumberInput = ({
           id: aspect.id,
           value: value,
           aspect: aspect,
-          message: "Negatív pontszám!",
+          message: "Negatív pontot adott meg!",
         });
         return false;
       }

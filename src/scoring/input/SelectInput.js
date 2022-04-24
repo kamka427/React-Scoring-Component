@@ -45,7 +45,6 @@ export const SelectInput = ({
     const value = e.target.value;
     setSelection(value);
     if (validateInput(value)) {
-      console.log(value);
       value !== ""
         ? addResult({
             id: aspect.id,

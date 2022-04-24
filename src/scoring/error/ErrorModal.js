@@ -15,9 +15,7 @@ export const ErrorModal = ({
   err,
   taskName,
 }) => {
-  useEffect(() => {
-    handleClose();
-  }, []);
+ 
   let component;
 
   switch (aspect.type) {
@@ -54,10 +52,10 @@ export const ErrorModal = ({
       <Box
         sx={{
           position: "absolute",
-          top: "15%",
+          top: "20%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 300,
+          width: 350,
           bgcolor: "background.paper",
           borderRadius: 2,
           boxShadow: 24,
@@ -68,7 +66,7 @@ export const ErrorModal = ({
           variant="body1"
           sx={{ textAlign: "center", marginBottom: 3 }}
         >
-          {taskName}/{aspect.name}
+          {taskName} / {aspect.name}
         </Typography>
         {component}
       </Box>
