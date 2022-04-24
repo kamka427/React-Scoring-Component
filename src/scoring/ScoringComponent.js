@@ -20,6 +20,7 @@ import "@fontsource/roboto/700.css";
 import { ErrorCard } from "./ErrorCard";
 import { Status } from "./main/Status";
 import { ErrorModal } from "./main/ErrorModal";
+import { forceReRender } from "@storybook/react";
 
 const darkTheme = createTheme({
   palette: {
@@ -211,8 +212,8 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
 
-  const errorList = formState.errors.map((err,i) => {
-    
+  const errorList = formState.errors.map((err, i) => {
+    console.log(err.aspect);
     return (
       <>
         <Alert
@@ -227,17 +228,19 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
         >
           {err.message}
         </Alert>
-        <ErrorModal
-          modalOpen={modalOpen}
-          handleOpen={handleOpen}
-          handleClose={handleClose}
-          addResult={addResult}
-          removeResult={removeResult}
-          setError={setError}
-          error={err}
-          formState={formState}
-          aspect={err.aspect}
-        />
+        {
+          <ErrorModal
+            modalOpen={modalOpen}
+            handleOpen={handleOpen}
+            handleClose={handleClose}
+            addResult={addResult}
+            removeResult={removeResult}
+            setError={setError}
+            formState={formState}
+            err={err}
+            aspect={err.aspect}
+          />
+        }
       </>
     );
   });
@@ -254,15 +257,6 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
         {criteria.tasks.map((task) => task.name).length > 0 ? (
           <>
             <Container>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "end",
-                }}
-              >
-                {errorList}
-              </Box>
               <Status
                 points={points}
                 maxReqPoints={maxReqPoints}
@@ -279,6 +273,16 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
                 onCancel={handleCancel}
                 canSubmit={canSubmit}
               />
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                {errorList}
+              </Box>
             </Container>
           </>
         ) : (

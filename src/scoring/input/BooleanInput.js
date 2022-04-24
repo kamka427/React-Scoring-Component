@@ -20,10 +20,6 @@ export const BooleanInput = ({ aspect, val, addResult, removeResult }) => {
           value: Number(value),
         })
       : removeResult(aspect.id);
-    //  addResult({
-    //   id: aspect.id,
-    //   value: 0,
-    // });
   };
 
   return (

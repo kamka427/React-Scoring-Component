@@ -12,11 +12,11 @@ export const ErrorModal = ({
   setError,
   modalOpen,
   handleClose,
+err  
 }) => {
   //determine if modal is booleaninput or numberinput or selectinput
 
   let val = formState.results.find((result) => result.id === aspect.id);
-    let err = formState.errors.find((err) => err.id === aspect.id);
   let component;
 
   switch (aspect.type) {
@@ -62,6 +62,7 @@ export const ErrorModal = ({
   return (
     <Modal
       open={modalOpen}
+      onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >

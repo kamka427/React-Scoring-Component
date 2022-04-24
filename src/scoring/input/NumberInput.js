@@ -9,7 +9,7 @@ export const NumberInput = ({
   removeResult,
   setError,
 }) => {
-  const [value, setValue] = useState(val ? val.value : "");
+  const [value, setValue] = useState(val ? val.value : '');
 
   const validateInput = (value) => {
     if (aspect.required && value === "") {
@@ -85,7 +85,7 @@ export const NumberInput = ({
             size="small"
             required={aspect.required}
             label={aspect.required ? "Kötelező" : "Opcionális"}
-            value={err !== undefined ? err.value : value ? value : ""}
+            value={(err ? err.value : val ? val.value : value ) || ''} 
             onChange={handleChange}
             error={err !== undefined}
             helperText={err !== undefined ? err.message : ""}

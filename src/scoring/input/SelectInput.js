@@ -32,6 +32,8 @@ export const SelectInput = ({
     if (aspect.required && value === "") {
       setError({
         id: aspect.id,
+        aspect: aspect,
+        value: value,
         message: "Kötelező kitölteni!",
       });
       return false;
@@ -45,16 +47,13 @@ export const SelectInput = ({
     if (validateInput(value)) {
       console.log(value);
       value !== ""
-      ? addResult({
-        id: aspect.id,
-        aspect: aspect,
-        value: Number(value),
-      })
-      : removeResult(aspect.id);
+        ? addResult({
+            id: aspect.id,
+            value: Number(value),
+          })
+        : removeResult(aspect.id);
     }
-
   };
-
 
   const list = items.map((item, i) => {
     return (
@@ -89,9 +88,7 @@ export const SelectInput = ({
             <InputLabel>Értékelés</InputLabel>
             <Select
               label="Értékelés"
-              value={
-               selection
-              }
+              value={val ? val.value : selection}
               onChange={handleChange}
             >
               {list}
@@ -101,19 +98,23 @@ export const SelectInput = ({
               {err !== undefined ? err.message : ""}
             </FormHelperText>
           </FormControl>
-          <Tooltip title={aspect.description ?? "Nincs leírása"} placement="right" arrow>
-          <Typography
-            sx={{
-              backgroundColor: "primary.main",
-              color: "white",
-              alignSelf: "self-start",
-              padding: 2,
-              borderTopRightRadius: 7,
-              borderBottomRightRadius: 7,
-            }}
+          <Tooltip
+            title={aspect.description ?? "Nincs leírása"}
+            placement="right"
+            arrow
           >
-            / {maxValue}
-          </Typography>
+            <Typography
+              sx={{
+                backgroundColor: "primary.main",
+                color: "white",
+                alignSelf: "self-start",
+                padding: 2,
+                borderTopRightRadius: 7,
+                borderBottomRightRadius: 7,
+              }}
+            >
+              / {maxValue}
+            </Typography>
           </Tooltip>
         </Box>
       </Container>
