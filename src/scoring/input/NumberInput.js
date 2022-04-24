@@ -1,17 +1,14 @@
-import { Box, Container, TextField, Typography } from "@mui/material";
-import {useState } from "react";
+import { Box, Container, TextField, Tooltip, Typography } from "@mui/material";
+import { useState } from "react";
 
 export const NumberInput = ({
   aspect,
-  formState,
+  val,
+  err,
   addResult,
   removeResult,
   setError,
-  clearError,
 }) => {
-  const val = formState.results.find((result) => result.id === aspect.id);
-  const err = formState.errors.find((err) => err.id === aspect.id);
-
   const [value, setValue] = useState(val ? val.value : "");
 
   const validateInput = (value) => {
@@ -89,20 +86,21 @@ export const NumberInput = ({
             error={err !== undefined}
             helperText={err !== undefined ? err.message : ""}
           ></TextField>
-
-          <Typography
-            sx={{
-              backgroundColor: "primary.main",
-              color: "white",
-              alignSelf: "self-start",
-              padding: 1,
-              paddingX: 2,
-              borderTopRightRadius: 7,
-              borderBottomRightRadius: 7,
-            }}
-          >
-            / {aspect.maxValue}
-          </Typography>
+          <Tooltip title={aspect.description ?? "Nincs leírása"} placement="right" arrow>
+            <Typography
+              sx={{
+                backgroundColor: "primary.main",
+                color: "white",
+                alignSelf: "self-start",
+                padding: 1,
+                paddingX: 2,
+                borderTopRightRadius: 7,
+                borderBottomRightRadius: 7,
+              }}
+            >
+              / {aspect.maxValue}
+            </Typography>
+          </Tooltip>
         </Box>
       </Container>
     </>

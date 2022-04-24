@@ -5,11 +5,12 @@ import {
   TableBody,
   TableRow,
   TableHead,
+  Tooltip,
 } from "@mui/material";
-import { BooleanInput } from "./BooleanInput";
-import { ErrorCard } from "./ErrorCard";
-import { NumberInput } from "./NumberInput";
-import { SelectInput } from "./SelectInput";
+import { BooleanInput } from "../input/BooleanInput";
+import { ErrorCard } from "../ErrorCard";
+import { NumberInput } from "../input/NumberInput";
+import { SelectInput } from "../input/SelectInput";
 
 export const AspectTable = ({
   aspects,
@@ -20,13 +21,16 @@ export const AspectTable = ({
 }) => {
   const rows = aspects.map((aspect, i) => {
     let component;
+    let val = formState.results.find((result) => result.id === aspect.id);
+    let err = formState.errors.find((err) => err.id === aspect.id);
     switch (aspect.type) {
       case "number":
         component = (
           <NumberInput
             key={i}
             aspect={aspect}
-            formState={formState}
+            val={val}
+            err={err}
             addResult={addResult}
             removeResult={removeResult}
             setError={setError}
@@ -38,7 +42,8 @@ export const AspectTable = ({
           <SelectInput
             key={i}
             aspect={aspect}
-            formState={formState}
+            val={val}
+            err={err}
             addResult={addResult}
             removeResult={removeResult}
             setError={setError}
@@ -49,8 +54,8 @@ export const AspectTable = ({
         component = (
           <BooleanInput
             key={i}
+            val={val}
             aspect={aspect}
-            formState={formState}
             addResult={addResult}
             removeResult={removeResult}
             setError={setError}
@@ -64,8 +69,17 @@ export const AspectTable = ({
     return (
       <TableRow key={i}>
         <TableCell align="center">{i + 1}</TableCell>
-        <TableCell align="center">{aspect.name}</TableCell>
-        <TableCell align="center">{component}</TableCell>
+        {err ? (
+          <TableCell align="center" sx={{ color: "error.main" }}>
+            {aspect.name}
+          </TableCell>
+        ) : (
+          <TableCell align="center">{aspect.name}</TableCell>
+        )}
+        <TableCell align="center">
+          {component}
+          
+          </TableCell>
         {aspect.description ? (
           <TableCell align="center">{aspect.description}</TableCell>
         ) : (

@@ -1,6 +1,6 @@
 import { Container, CssBaseline } from "@mui/material";
-import { Tasks } from "./Tasks";
-import { NavBar } from "./NavBar";
+import { Tasks } from "./main/Tasks";
+import { NavBar } from "./main/NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import "@fontsource/roboto/300.css";
@@ -8,7 +8,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ErrorCard } from "./ErrorCard";
-import { Status } from "./Status";
+import { Status } from "./main/Status";
 
 const darkTheme = createTheme({
   palette: {
@@ -30,26 +30,26 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     errors: [],
   });
 
-  useEffect(() => {
-    if (formState.results.length === 0) {
-      criteria.tasks.forEach((task) => {
-        task.aspects.forEach((aspect) => {
-          if (aspect.type === "boolean") {
-            setFormState((prevState) => ({
-              ...prevState,
-              results: [
-                ...prevState.results,
-                {
-                  id: aspect.id,
-                  value: 0,
-                },
-              ],
-            }));
-          }
-        });
-      });
-    }
-  }, [setFormState, criteria, formState.results]);
+  // useEffect(() => {
+  //   if (formState.results.length === 0) {
+  //     criteria.tasks.forEach((task) => {
+  //       task.aspects.forEach((aspect) => {
+  //         if (aspect.type === "boolean") {
+  //           setFormState((prevState) => ({
+  //             ...prevState,
+  //             results: [
+  //               ...prevState.results,
+  //               {
+  //                 id: aspect.id,
+  //                 value: 0,
+  //               },
+  //             ],
+  //           }));
+  //         }
+  //       });
+  //     });
+  //   }
+  // }, [setFormState, criteria, formState.results]);
 
   const addResult = (result) => {
     if (formState.results.find((res) => res.id === result.id) === undefined) {
@@ -77,6 +77,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     setFormState({
       ...formState,
       results: formState.results.filter((result) => result.id !== id),
+      errors: formState.errors.filter((err) => err.id !== id),
     });
   };
 
@@ -103,11 +104,31 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
   };
 
   const handleSubmit = () => {
-    onSubmit({ results: formState.results });
+    let data = {
+      results: [...formState.results],
+    };
+    criteria.tasks.forEach((task) => {
+      task.aspects.forEach((aspect) => {
+        if (
+          data.results.find((result) => result.id === aspect.id) === undefined
+        ) {
+          data.results.push({
+            id: aspect.id,
+            value: 0,
+          });
+        }
+      });
+    });
+    data.results.sort((a, b) => a.id - b.id);
+    onSubmit(JSON.stringify(data));
   };
 
   const handleCancel = () => {
-    onCancel({ results: formState.results });
+    let data = {
+      results: [...formState.results],
+    };
+    data.results.sort((a, b) => a.id - b.id);
+    onCancel(JSON.stringify(data));
   };
 
   const [darkThemeEnabled, toggleTheme] = useState(true);
@@ -136,6 +157,23 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     return acc + cur.value;
   }, 0);
 
+  const reqFilled = criteria.tasks.reduce((acc, cur) => {
+    return (
+      acc +
+      cur.aspects.reduce((acc, cur) => {
+        if (cur.required) {
+          if (
+            formState.results.find((res) => res.id === cur.id) !== undefined
+          ) {
+            return acc + 1;
+          }
+          return acc;
+        }
+        return acc;
+      }, 0)
+    );
+  }, 0);
+
   const maxReqPoints = criteria.tasks
     .map((task) => task.aspects)
     .reduce((acc, cur) => {
@@ -156,24 +194,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
       );
     }, 0);
 
-  const booleanCount = criteria.tasks
-    .map((task) => task.aspects)
-    .reduce((acc, cur) => {
-      return (
-        acc +
-        cur.reduce((acc, cur) => {
-          if (cur.type === "boolean") {
-            return acc + 1;
-          }
-          return acc;
-        }, 0)
-      );
-    }, 0);
-
-  const progress = Math.min(
-    formState.results.length - booleanCount,
-    maxReqPoints
-  );
+  const canSubmit = aspectsReqCount === reqFilled;
 
   return (
     <>
@@ -190,7 +211,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
               <Status
                 points={points}
                 maxReqPoints={maxReqPoints}
-                filledCount={progress}
+                filledCount={reqFilled}
                 aspectsReqCount={aspectsReqCount}
               />
               <Tasks
@@ -201,6 +222,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
                 setError={setError}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
+                canSubmit={canSubmit}
               />
             </Container>
           </>

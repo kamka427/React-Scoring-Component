@@ -12,6 +12,7 @@ export function Tasks({
   setError,
   onSubmit,
   onCancel,
+  canSubmit,
 }) {
   const [tabIndex, setTabIndex] = useState("0");
   const switchTab = (e, newTabIndex) => setTabIndex(newTabIndex);
@@ -32,10 +33,26 @@ export function Tasks({
     }
   };
 
-  const countFilledTask = (task) => {
+  const countCorrect = (task) => {
     let count = 0;
     task.aspects.forEach((aspect) => {
       let result = formState.results.find((result) => result.id === aspect.id);
+      let error = formState.errors.find((err) => err.id === aspect.id);
+      if (result === undefined && aspect.required === false && !error) {
+        count++;
+      } else if (aspect.type === "boolean") {
+        count++;
+      } else if (result) {
+        count++;
+      }
+    });
+    return count;
+  };
+
+  const countErrors = (task) => {
+    let count = 0;
+    task.aspects.forEach((aspect) => {
+      let result = formState.errors.find((result) => result.id === aspect.id);
       if (result) {
         count++;
       }
@@ -44,9 +61,11 @@ export function Tasks({
   };
 
   const taskLabel = (task) => {
-    return (
-      task.name + " (" + countFilledTask(task) + "/" + task.aspects.length + ")"
-    );
+    return countErrors(task) > 0
+      ? `${task.name} (${countCorrect(task)} ✔️ ${countErrors(task)} ❌ / ${
+          task.aspects.length
+        })`
+      : `${task.name} (${countCorrect(task)} ✔️ / ${task.aspects.length})`;
   };
 
   const tabs = criteria.tasks.map((task, i) => (
@@ -88,6 +107,7 @@ export function Tasks({
           onCancel={onCancel}
           onNext={nextTask}
           onPrev={prevTask}
+          canSubmit={canSubmit}
         />
       </TabContext>
     </>

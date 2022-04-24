@@ -2,7 +2,7 @@ import { Button, Box, Container, Divider } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIosNew";
 
-export const Buttons = ({ onSubmit, onCancel, onNext, onPrev }) => {
+export const Buttons = ({ onSubmit, onCancel, onNext, onPrev, canSubmit }) => {
   return (
     <>
       <Divider variant="middle" />
@@ -13,7 +13,7 @@ export const Buttons = ({ onSubmit, onCancel, onNext, onPrev }) => {
           <ArrowBackIosIcon />
         </Button>
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-          <Button variant="contained" color="success" onClick={onSubmit}>
+          <Button variant="contained" color="success" onClick={onSubmit} disabled={!canSubmit}>
             Mentés
           </Button>
           <Divider orientation="vertical" variant="middle" flexItem />

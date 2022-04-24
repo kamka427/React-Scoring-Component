@@ -1,17 +1,29 @@
-import { Box, Checkbox, Container, Divider, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Container,
+  Divider,
+  fabClasses,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 
-export const BooleanInput = ({ aspect, formState, addResult }) => {
-  const val = formState.results.find((result) => result.id === aspect.id);
-
-  const [value, setValue] = useState(val.val > 0 ? true : false);
+export const BooleanInput = ({ aspect, val, addResult, removeResult }) => {
+  const [value, setValue] = useState(val && val > 0 ? true : false);
 
   const handleChange = (e) => {
     setValue(e.target.checked);
     e.target.checked
-      ? addResult(e.target.value, aspect.id)
-      : addResult(0, aspect.id);
-    console.log(formState.results);
+      ? addResult({
+          id: aspect.id,
+          value: Number(value),
+        })
+      : removeResult(aspect.id);
+    //  addResult({
+    //   id: aspect.id,
+    //   value: 0,
+    // });
   };
 
   return (
@@ -37,6 +49,7 @@ export const BooleanInput = ({ aspect, formState, addResult }) => {
             value={aspect.value}
           />
           <Divider orientation="vertical" variant="middle" flexItem />
+          <Tooltip title={aspect.description ?? "Nincs leírása"} placement="right" arrow>
 
           <Typography
             sx={{
@@ -51,6 +64,7 @@ export const BooleanInput = ({ aspect, formState, addResult }) => {
           >
             {aspect.value}
           </Typography>
+          </Tooltip>
         </Box>
       </Container>
     </>

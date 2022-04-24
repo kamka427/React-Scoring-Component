@@ -5,14 +5,16 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 export const SelectInput = ({
   aspect,
-  formState,
+  val,
+  err,
   addResult,
   removeResult,
   setError,
@@ -23,9 +25,6 @@ export const SelectInput = ({
       value: Object.values(aspect.values)[index],
     };
   });
-
-  const val = formState.results.find((result) => result.id === aspect.id);
-  const err = formState.errors.find((err) => err.id === aspect.id);
 
   const [selection, setSelection] = useState(val ? val.value : "");
 
@@ -46,13 +45,15 @@ export const SelectInput = ({
     if (validateInput(value)) {
       console.log(value);
       value !== ""
-        ? addResult({
-            id: aspect.id,
-            value: Number(value),
-          })
-        : removeResult(aspect.id);
+      ? addResult({
+        id: aspect.id,
+        value: Number(value),
+      })
+      : removeResult(aspect.id);
     }
+
   };
+
 
   const list = items.map((item, i) => {
     return (
@@ -99,6 +100,7 @@ export const SelectInput = ({
               {err !== undefined ? err.message : ""}
             </FormHelperText>
           </FormControl>
+          <Tooltip title={aspect.description ?? "Nincs leírása"} placement="right" arrow>
           <Typography
             sx={{
               backgroundColor: "primary.main",
@@ -111,6 +113,7 @@ export const SelectInput = ({
           >
             / {maxValue}
           </Typography>
+          </Tooltip>
         </Box>
       </Container>
     </>
