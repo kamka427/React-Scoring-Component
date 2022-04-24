@@ -1,5 +1,6 @@
 import { Modal, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useEffect } from "react";
 import { BooleanInput } from "../input/BooleanInput";
 import { NumberInput } from "../input/NumberInput";
 import { SelectInput } from "../input/SelectInput";
@@ -12,10 +13,11 @@ export const ErrorModal = ({
   setError,
   modalOpen,
   handleClose,
-err  
+  err,
 }) => {
-  //determine if modal is booleaninput or numberinput or selectinput
-
+  useEffect(() => {
+    handleClose();
+  }, []);
   let val = formState.results.find((result) => result.id === aspect.id);
   let component;
 
@@ -44,42 +46,29 @@ err
         />
       );
       break;
-    case "boolean":
-      component = (
-        <BooleanInput
-          val={val}
-          aspect={aspect}
-          addResult={addResult}
-          removeResult={removeResult}
-          setError={setError}
-        />
-      );
-      break;
-    default:
-      break;
+      default:
+        break;
   }
 
   return (
-    <Modal
-      open={modalOpen}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+    <Modal open={modalOpen} onClose={handleClose}>
       <Box
         sx={{
           position: "absolute",
-          top: "25%",
+          top: "15%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
+          width: 300,
           bgcolor: "background.paper",
-          border: "2px solid #000",
+          borderRadius: 2,
           boxShadow: 24,
-          p: 4,
+          paddingTop: 2,
         }}
       >
-        <Typography variant="h6" >
+        <Typography
+          variant="body1"
+          sx={{ textAlign: "center", marginBottom: 3 }}
+        >
           Text in a modal
         </Typography>
         {component}

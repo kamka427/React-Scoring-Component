@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { BooleanInput } from "../input/BooleanInput";
-import { ErrorCard } from "../ErrorCard";
+import { ErrorCard } from "./ErrorCard";
 import { NumberInput } from "../input/NumberInput";
 import { SelectInput } from "../input/SelectInput";
 

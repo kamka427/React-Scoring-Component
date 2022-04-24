@@ -17,7 +17,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { ErrorCard } from "./ErrorCard";
+import { ErrorCard } from "./main/ErrorCard";
 import { Status } from "./main/Status";
 import { ErrorModal } from "./main/ErrorModal";
 import { forceReRender } from "@storybook/react";
@@ -217,7 +217,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
     return (
       <>
         <Alert
-          sx={{ marginTop: 2, maxWidth: "25%", alignSelf: "right" }}
+          sx={{ marginTop: 2, minWidth: "50%" }}
           severity="error"
           variant="outlined"
           action={
@@ -276,6 +276,7 @@ export function ScoringComponent({ criteria, onSubmit, onCancel }) {
 
               <Box
                 sx={{
+                  marginTop: 3,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
