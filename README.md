@@ -1,45 +1,10 @@
 # Pontozó komponens készítése React-ben
 
-_Kliensoldali webprogramozás 1. beadandó_
-
-## Nyilatkozat
-
-Kérlek, töltsétek ki az adataitokkal beadás előtt!
-
-```txt
-Neszlényi Kálmán Balázs
-DPU51T
-Kliensoldali webprogramozás - beadandó
-Ezt a megoldást a fent írt hallgató küldte be és készítette a Kliensoldali webprogramozás kurzus számonkéréséhez.
-Kijelentem, hogy ez a megoldás a saját munkám. Nem másoltam vagy használtam harmadik féltől 
-származó megoldásokat. Nem továbbítottam megoldást hallgatótársaimnak, és nem is tettem közzé. 
-Az Eötvös Loránd Tudományegyetem Hallgatói Követelményrendszere 
-(ELTE szervezeti és működési szabályzata, II. Kötet, 74/C. §) kimondja, hogy mindaddig, 
-amíg egy hallgató egy másik hallgató munkáját - vagy legalábbis annak jelentős részét - 
-saját munkájaként mutatja be, az fegyelmi vétségnek számít. 
-A fegyelmi vétség legsúlyosabb következménye a hallgató elbocsátása az egyetemről.
-```
-
-## Telepítés
-
-```bash
-npm install
-```
-
-## Futtatás
-
-```bash
-npm start
-```
-
-## Tesztelés
-
-A tesztelés a futtatással párhuzamosan is történhet. Ezt elsősorban a tanári értékelés megkönnyítésére hoztuk létre, de a hallgatók is láthatják ezt a felületet. Alapvetően a `stories` könyvtárhoz nem kell hozzányúlni. Ha azonban látod, hogyan működik, és saját tesztekkel kiegészítenéd, akkor azt nyugodtan tedd meg. A komponens interfészén azonban változtatni nem szabad!
-
-```bash
-npm run storybook
-```
-
-## Leírás
-
-A keretprogram egy egyszerű és lecsupaszított alkalmazás a Create-React-App-pal létrehozva. A fő `App` komponens egyszerűen csak megjeleníti a `ScoringComponent` komponenst. A feladatod ennek a `ScoringComponent` komponensnek az elkészítése. A legjobb az lenne, ha a megoldásod a `scoring` könyvtárba kerülne, és azon belül hoznál létre további fájlokat és könyvtárakat igény szerint.
+Feladatpontozó komponens implementáációja React-ben \
+```A futtatáshoz klónozd le a mappát és npm i-vel telepítsd fel a dependenciákat, majd npm start-tal futtasd a projektet.```
+> Node 17-es verzión készült!
+<img width="1401" alt="Képernyőfotó 2022-10-02 - 12 12 52" src="https://user-images.githubusercontent.com/73647069/193449013-c9e59f5e-dd1a-4554-9577-38ff5c54241c.png">
+<img width="1408" alt="Képernyőfotó 2022-10-02 - 12 12 20" src="https://user-images.githubusercontent.com/73647069/193449020-3df9b896-5688-4c2c-a803-f5402285032e.png">
+<img width="1397" alt="Képernyőfotó 2022-10-02 - 12 12 45" src="https://user-images.githubusercontent.com/73647069/193449017-0a70f841-ab35-4e60-8d28-7685dd092c64.png">
+<img width="1406" alt="Képernyőfotó 2022-10-02 - 12 12 29" src="https://user-images.githubusercontent.com/73647069/193449018-96f042ae-48ab-40d0-9c7d-b11ea9ce6598.png">
+[Uploading Képernyőfotó 2022-10-02 - 12.13.01.png…]()
